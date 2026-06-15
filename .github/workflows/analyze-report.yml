@@ -1,12 +1,21 @@
 name: Analyze & Generate Report
 
 on:
+  # 兜底定时任务（防止 fetch 失败时报告也不更新）
   schedule:
-    # Asia/Shanghai (UTC+8) 09:30 → UTC 01:30
-    # Asia/Shanghai (UTC+8) 21:30 → UTC 13:30
+    # Asia/Shanghai 09:30 → UTC 01:30
+    # Asia/Shanghai 21:30 → UTC 13:30
     - cron: "30 1 * * *"
     - cron: "30 13 * * *"
-  workflow_dispatch:        # 允许手动触发
+
+  # 手动触发
+  workflow_dispatch:
+
+  # 🔗 串联：fetch-data 跑成功后自动触发
+  workflow_run:
+    workflows: ["Fetch OKX SOL Data"]   # 必须与 fetch-data.yml 的 name 完全一致
+    types: [completed]
+    branches: [main]                    # 如果你的默认分支不是 main，请改这里
 
 permissions:
   contents: write
@@ -21,6 +30,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    # 仅当 fetch-data 成功时才跑（避免 fetch 失败也生成基于旧数据的报告）
+    # cron / 手动触发时 workflow_run 上下文为空，条件自动放行
+    if: >
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+
     env:
       TZ: Asia/Shanghai
 
@@ -28,8 +43,8 @@ jobs:
       - name: Checkout repo (拉取最新数据)
         uses: actions/checkout@v4
         with:
-          # 保证拿到 fetch-data 工作流 30 分钟前刚 push 的最新 data/
-          ref: ${{ github.ref }}
+          # workflow_run 默认 checkout default 分支最新 commit，这里显式声明保险
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
           fetch-depth: 1
 
       - name: Set up Python
@@ -43,15 +58,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Show schedule context
+      - name: Show trigger context
         run: |
           echo "UTC now:      $(date -u '+%Y-%m-%d %H:%M:%S')"
           echo "Shanghai now: $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
+          echo "Triggered by: ${{ github.event_name }}"
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "Upstream workflow: ${{ github.event.workflow_run.name }}"
+            echo "Upstream status:   ${{ github.event.workflow_run.conclusion }}"
+            echo "Upstream run id:   ${{ github.event.workflow_run.id }}"
+          fi
 
       - name: Sanity check - data/ must exist
         run: |
           if [ ! -f data/ohlcv_1h.csv ]; then
-            echo "❌ data/ohlcv_1h.csv 不存在。请先运行 fetch-data.yml。"
+            echo "❌ data/ohlcv_1h.csv 不存在。请先成功运行 fetch-data 工作流。"
             exit 1
           fi
           echo "✅ data/ 已就绪。"
@@ -65,7 +86,6 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # 只追踪报告类文件的变化
           git add REPORT.md analysis.json
 
           if git diff --cached --quiet; then
@@ -74,12 +94,13 @@ jobs:
           fi
 
           SH_TS=$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M %Z')
-          git commit -m "docs(report): auto regenerate @ ${SH_TS}"
+          TRIGGER="${{ github.event_name }}"
+          git commit -m "docs(report): auto regenerate @ ${SH_TS} (trigger=${TRIGGER})"
 
           git pull --rebase origin "${GITHUB_REF_NAME}" || true
           git push origin HEAD:"${GITHUB_REF_NAME}"
 
-      - name: Upload report as artifact (备份)
+      - name: Upload report as artifact
         uses: actions/upload-artifact@v4
         with:
           name: report-${{ github.run_id }}
