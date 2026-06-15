@@ -27,8 +27,17 @@ DATA_DIR = os.path.join(ROOT, "data")
 OUT_REPORT = os.path.join(ROOT, "REPORT.md")
 OUT_JSON = os.path.join(ROOT, "analysis.json")
 
-TIMEFRAMES = ["1m", "5m", "15m", "1h", "4h", "1d"]
-ANNUAL_BARS = {"1m": 525600, "5m": 105120, "15m": 35040, "1h": 8760, "4h": 2190, "1d": 365}
+TIMEFRAMES = ["1m", "5m", "15m", "30m", "1h", "2h", "4h", "1d"]
+ANNUAL_BARS = {
+    "1m": 525600,
+    "5m": 105120,
+    "15m": 35040,
+    "30m": 17520,
+    "1h": 8760,
+    "2h": 4380,
+    "4h": 2190,
+    "1d": 365,
+}
 
 
 # ============================== 加载数据 ==============================
@@ -396,27 +405,28 @@ def main() -> None:
 def compute_score(snaps, deriv, last, high_n):
     rows = []
 
-    # 多周期均线排列
+    # 多周期均线排列（覆盖中短期所有可用周期）
     def aligned_up(s):
         if s.get("ema20") is None or s.get("ema50") is None or s.get("ema200") is None:
             return 0
         return 1 if s["last_close"] > s["ema20"] > s["ema50"] > s["ema200"] else \
                -1 if s["last_close"] < s["ema20"] < s["ema50"] < s["ema200"] else 0
 
-    up_count = sum(max(0, aligned_up(snaps[tf])) for tf in ["4h", "1h", "15m", "5m"])
-    dn_count = sum(-min(0, aligned_up(snaps[tf])) for tf in ["4h", "1h", "15m", "5m"])
-    rows.append(("多周期均线排列", up_count - dn_count, 4, -4))
+    ma_tfs = ["4h", "2h", "1h", "30m", "15m", "5m"]
+    up_count = sum(max(0, aligned_up(snaps[tf])) for tf in ma_tfs)
+    dn_count = sum(-min(0, aligned_up(snaps[tf])) for tf in ma_tfs)
+    rows.append(("多周期均线排列", up_count - dn_count, len(ma_tfs), -len(ma_tfs)))
 
-    # MACD 1h/4h
+    # MACD 1h/2h/4h
     m_score = 0
-    for tf in ["1h", "4h"]:
+    for tf in ["1h", "2h", "4h"]:
         s = snaps[tf]
         if s["macd"] is None: continue
         if s["macd"] > s["macd_sig"] and s["macd_hist"] > 0: m_score += 1
         elif s["macd"] < s["macd_sig"] and s["macd_hist"] < 0: m_score -= 1
-    rows.append(("MACD (1h/4h)", m_score, 2, -2))
+    rows.append(("MACD (1h/2h/4h)", m_score, 3, -3))
 
-    # ADX 趋势强度
+    # ADX 趋势强度（1h）
     a = snaps["1h"]
     if a["adx14"] and a["adx14"] > 25:
         rows.append(("ADX(1h) 强趋势", 1 if a["+DI"] > a["-DI"] else -1, 1, -1))
@@ -455,13 +465,13 @@ def compute_score(snaps, deriv, last, high_n):
     else:
         rows.append(("Ichimoku (1h)", 0, 1, -1))
 
-    # SuperTrend 1h/4h
+    # SuperTrend 1h/2h/4h
     st = 0
-    for tf in ["1h", "4h"]:
+    for tf in ["1h", "2h", "4h"]:
         d = snaps[tf]["st_dir"]
         if d is None: continue
         st += 1 if d == 1 else -1
-    rows.append(("SuperTrend (1h/4h)", st, 2, -2))
+    rows.append(("SuperTrend (1h/2h/4h)", st, 3, -3))
 
     # CMF/CVD 资金流
     cvd = deriv.get("cvd_24h") or 0
@@ -666,7 +676,7 @@ def write_report_md(s: dict, ind: dict, fr, oi, ls, tv) -> None:
     lines.append("")
     lines.append("| 周期 | CMF(20) | 简评 |")
     lines.append("|---|---:|---|")
-    for tf in ["15m", "1h", "4h"]:
+    for tf in ["15m", "30m", "1h", "2h", "4h"]:
         cmf_v = snaps[tf]["cmf20"]
         lines.append(f"| {tf} | {fmt_num(cmf_v,3)} | {cmf_comment(cmf_v)} |")
     lines.append("")
@@ -681,31 +691,42 @@ def write_report_md(s: dict, ind: dict, fr, oi, ls, tv) -> None:
     lines.append("")
     lines.append("## 4. 量化指标维度")
     lines.append("")
-    lines.append("| 指标 | 1h | 4h | 1d |")
-    lines.append("|---|---:|---:|---:|")
+    lines.append("| 指标 | 1h | 2h | 4h | 1d |")
+    lines.append("|---|---:|---:|---:|---:|")
     def qv(tf, k, fmt=lambda x: fmt_num(x, 4)):
         v = quants[tf].get(k); return "—" if v is None else fmt(v)
-    lines.append(f"| 样本数 | {quants['1h'].get('n_bars')} | {quants['4h'].get('n_bars')} | {quants['1d'].get('n_bars')} |")
+    lines.append(f"| 样本数 | {quants['1h'].get('n_bars')} | {quants['2h'].get('n_bars')} | "
+                 f"{quants['4h'].get('n_bars')} | {quants['1d'].get('n_bars')} |")
     lines.append(f"| 年化已实现波动率 | {qv('1h','realized_vol_annualized_pct', lambda x: f'{x:.1f}%')} | "
+                 f"{qv('2h','realized_vol_annualized_pct', lambda x: f'{x:.1f}%')} | "
                  f"{qv('4h','realized_vol_annualized_pct', lambda x: f'{x:.1f}%')} | "
                  f"{qv('1d','realized_vol_annualized_pct', lambda x: f'{x:.1f}%')} |")
     lines.append(f"| 最大回撤 | {qv('1h','max_drawdown_pct', lambda x: f'{x:.2f}%')} | "
+                 f"{qv('2h','max_drawdown_pct', lambda x: f'{x:.2f}%')} | "
                  f"{qv('4h','max_drawdown_pct', lambda x: f'{x:.2f}%')} | "
                  f"{qv('1d','max_drawdown_pct', lambda x: f'{x:.2f}%')} |")
     lines.append(f"| 收益偏度 (Skew) | {qv('1h','skew', lambda x: f'{x:+.2f}')} | "
-                 f"{qv('4h','skew', lambda x: f'{x:+.2f}')} | {qv('1d','skew', lambda x: f'{x:+.2f}')} |")
+                 f"{qv('2h','skew', lambda x: f'{x:+.2f}')} | "
+                 f"{qv('4h','skew', lambda x: f'{x:+.2f}')} | "
+                 f"{qv('1d','skew', lambda x: f'{x:+.2f}')} |")
     lines.append(f"| 收益峰度 (Kurt) | {qv('1h','kurt', lambda x: f'{x:+.2f}')} | "
-                 f"{qv('4h','kurt', lambda x: f'{x:+.2f}')} | {qv('1d','kurt', lambda x: f'{x:+.2f}')} |")
+                 f"{qv('2h','kurt', lambda x: f'{x:+.2f}')} | "
+                 f"{qv('4h','kurt', lambda x: f'{x:+.2f}')} | "
+                 f"{qv('1d','kurt', lambda x: f'{x:+.2f}')} |")
     lines.append(f"| Lag‑1 自相关 | {qv('1h','autocorr_lag1', lambda x: f'{x:+.3f}')} | "
-                 f"{qv('4h','autocorr_lag1', lambda x: f'{x:+.3f}')} | {qv('1d','autocorr_lag1', lambda x: f'{x:+.3f}')} |")
+                 f"{qv('2h','autocorr_lag1', lambda x: f'{x:+.3f}')} | "
+                 f"{qv('4h','autocorr_lag1', lambda x: f'{x:+.3f}')} | "
+                 f"{qv('1d','autocorr_lag1', lambda x: f'{x:+.3f}')} |")
     lines.append(f"| Hurst 指数 | {qv('1h','hurst', lambda x: f'{x:.3f}')} | "
-                 f"{qv('4h','hurst', lambda x: f'{x:.3f}')} | {qv('1d','hurst', lambda x: f'{x:.3f}')} |")
+                 f"{qv('2h','hurst', lambda x: f'{x:.3f}')} | "
+                 f"{qv('4h','hurst', lambda x: f'{x:.3f}')} | "
+                 f"{qv('1d','hurst', lambda x: f'{x:.3f}')} |")
     lines.append("")
     lines.append("**量化解读：**")
     h1 = quants["1h"].get("hurst"); ac1h = quants["1h"].get("autocorr_lag1")
-    ac4h = quants["4h"].get("autocorr_lag1")
+    ac4h = quants["4h"].get("autocorr_lag1"); ac2h = quants["2h"].get("autocorr_lag1")
     lines.append(f"- **Hurst (1h) = {fmt_num(h1,3)}** → {hurst_comment(h1)}")
-    lines.append(f"- **1h 自相关 = {fmt_num(ac1h,3)}，4h 自相关 = {fmt_num(ac4h,3)}** → "
+    lines.append(f"- **1h 自相关 = {fmt_num(ac1h,3)}，2h 自相关 = {fmt_num(ac2h,3)}，4h 自相关 = {fmt_num(ac4h,3)}** → "
                  f"{ac_comment(ac4h)}")
     lines.append("- **正偏 + 高峰度**：行情存在尾部跳跃风险，仓位管理优于"
                  "胜率优化；建议固定百分比 R 风控。")
@@ -912,16 +933,20 @@ def ac_comment(ac):
 def build_levels(snaps, fibs, pivots, last):
     """从指标快照中抽取关键支撑/阻力位，按距离当前价排序为表格。"""
     raw = []
-    s1h = snaps["1h"]; s4h = snaps["4h"]; s15m = snaps["15m"]; s1d = snaps["1d"]; s5m = snaps["5m"]
+    s1h = snaps["1h"]; s2h = snaps["2h"]; s4h = snaps["4h"]
+    s15m = snaps["15m"]; s30m = snaps["30m"]
+    s1d = snaps["1d"]; s5m = snaps["5m"]
     # 阻力
     for name, v in [
         ("Pivot R3", pivots["R3"]),
         ("Pivot R2", pivots["R2"]),
         ("Pivot R1", pivots["R1"]),
         ("4h BB 上轨", s4h.get("bb_up")),
+        ("2h BB 上轨", s2h.get("bb_up")),
         ("1h BB 上轨", s1h.get("bb_up")),
         ("窗口高点", fibs["100% (高)"]),
         ("1h Donchian 上沿", s1h.get("donchian_up")),
+        ("30m Donchian 上沿", s30m.get("donchian_up")),
         ("4h Keltner 上轨", s4h.get("kc_up")),
         ("1d SuperTrend", s1d.get("supertrend") if s1d.get("st_dir") == -1 else None),
     ]:
@@ -936,16 +961,20 @@ def build_levels(snaps, fibs, pivots, last):
         ("Fib 23.6%", fibs["23.6%"]),
         ("窗口低点", fibs["0% (低)"]),
         ("1h SuperTrend", s1h.get("supertrend") if s1h.get("st_dir") == 1 else None),
+        ("2h SuperTrend", s2h.get("supertrend") if s2h.get("st_dir") == 1 else None),
         ("4h SuperTrend", s4h.get("supertrend") if s4h.get("st_dir") == 1 else None),
         ("1h Ichimoku 基线", s1h.get("ichimoku_base")),
         ("1h Ichimoku Span A", s1h.get("ichimoku_spanA")),
         ("1h Ichimoku Span B", s1h.get("ichimoku_spanB")),
+        ("2h Ichimoku 基线", s2h.get("ichimoku_base")),
         ("1h BB 中轨", s1h.get("bb_mid")),
+        ("2h BB 中轨", s2h.get("bb_mid")),
         ("Pivot S1", pivots["S1"]),
         ("Pivot S2", pivots["S2"]),
         ("Pivot S3", pivots["S3"]),
         ("5m Donchian 下沿", s5m.get("donchian_dn")),
         ("15m Donchian 下沿", s15m.get("donchian_dn")),
+        ("30m Donchian 下沿", s30m.get("donchian_dn")),
     ]:
         if v and v < last:
             raw.append(("🟢", v, name))
