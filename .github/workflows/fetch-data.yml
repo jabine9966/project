@@ -3,15 +3,14 @@ name: Fetch OKX SOL Data
 on:
   schedule:
     # GitHub Actions cron 使用 UTC 时间
-    # Asia/Shanghai (UTC+8) 09:00 → UTC 01:00
-    # Asia/Shanghai (UTC+8) 21:00 → UTC 13:00
+    # Asia/Shanghai 09:00 → UTC 01:00
+    # Asia/Shanghai 21:00 → UTC 13:00
     - cron: "0 1 * * *"
     - cron: "0 13 * * *"
   workflow_dispatch:        # 允许手动触发
 
-# 允许工作流向仓库写入（提交回 data/ 目录）
 permissions:
-  contents: write
+  contents: write           # 允许向仓库 push commit
 
 concurrency:
   group: fetch-data
@@ -45,6 +44,7 @@ jobs:
         run: |
           echo "UTC now:      $(date -u '+%Y-%m-%d %H:%M:%S')"
           echo "Shanghai now: $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
+          echo "Triggered by: ${{ github.event_name }}"
 
       - name: Run fetch_data.py
         run: python scripts/fetch_data.py
@@ -54,7 +54,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # 只追踪 data/ 目录里的变化
+          # 只追踪 data/ 目录的变化
           git add data/
 
           if git diff --cached --quiet; then
@@ -65,11 +65,11 @@ jobs:
           SH_TS=$(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M %Z')
           git commit -m "chore(data): auto refresh @ ${SH_TS}"
 
-          # 推送前先 rebase，避免与 analyze-report 工作流的提交冲突
+          # 推送前 rebase，避免与 analyze-report 工作流的提交冲突
           git pull --rebase origin "${GITHUB_REF_NAME}" || true
           git push origin HEAD:"${GITHUB_REF_NAME}"
 
-      - name: Upload data as artifact (备份)
+      - name: Upload data snapshot as artifact
         uses: actions/upload-artifact@v4
         with:
           name: data-snapshot-${{ github.run_id }}
