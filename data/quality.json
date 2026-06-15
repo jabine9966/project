@@ -1,0 +1,144 @@
+{
+  "generated_at_sh": "2026-06-15T22:36:50.890487+08:00",
+  "exchange": "OKX",
+  "symbol": "SOL/USDT:USDT",
+  "inst_id": "SOL-USDT-SWAP",
+  "lookback_days": 15,
+  "window_start_sh": "2026-05-31T22:36:50.890000+08:00",
+  "window_end_sh": "2026-06-15T22:36:50.890000+08:00",
+  "datasets": {
+    "ohlcv_1m": {
+      "raw_rows": 21600,
+      "clean_rows": 21600,
+      "duplicates": 0,
+      "bad_ohlc_dropped": 0,
+      "ohlc_relation_anomalies": 0,
+      "expected_bars": 21600,
+      "completeness_pct": 100.0,
+      "missing_bars": 0,
+      "return_outliers_8sigma": 5,
+      "first_ts": "2026-05-31T22:37:00+08:00",
+      "last_ts": "2026-06-15T22:36:00+08:00",
+      "file": "data/ohlcv_1m.csv"
+    },
+    "ohlcv_5m": {
+      "raw_rows": 4320,
+      "clean_rows": 4320,
+      "duplicates": 0,
+      "bad_ohlc_dropped": 0,
+      "ohlc_relation_anomalies": 0,
+      "expected_bars": 4320,
+      "completeness_pct": 100.0,
+      "missing_bars": 0,
+      "return_outliers_8sigma": 2,
+      "first_ts": "2026-05-31T22:40:00+08:00",
+      "last_ts": "2026-06-15T22:35:00+08:00",
+      "file": "data/ohlcv_5m.csv"
+    },
+    "ohlcv_15m": {
+      "raw_rows": 1440,
+      "clean_rows": 1440,
+      "duplicates": 0,
+      "bad_ohlc_dropped": 0,
+      "ohlc_relation_anomalies": 0,
+      "expected_bars": 1440,
+      "completeness_pct": 100.0,
+      "missing_bars": 0,
+      "return_outliers_8sigma": 1,
+      "first_ts": "2026-05-31T22:45:00+08:00",
+      "last_ts": "2026-06-15T22:30:00+08:00",
+      "file": "data/ohlcv_15m.csv"
+    },
+    "ohlcv_1h": {
+      "raw_rows": 360,
+      "clean_rows": 360,
+      "duplicates": 0,
+      "bad_ohlc_dropped": 0,
+      "ohlc_relation_anomalies": 0,
+      "expected_bars": 360,
+      "completeness_pct": 100.0,
+      "missing_bars": 0,
+      "return_outliers_8sigma": 0,
+      "first_ts": "2026-05-31T23:00:00+08:00",
+      "last_ts": "2026-06-15T22:00:00+08:00",
+      "file": "data/ohlcv_1h.csv"
+    },
+    "ohlcv_4h": {
+      "raw_rows": 90,
+      "clean_rows": 90,
+      "duplicates": 0,
+      "bad_ohlc_dropped": 0,
+      "ohlc_relation_anomalies": 0,
+      "expected_bars": 90,
+      "completeness_pct": 100.0,
+      "missing_bars": 0,
+      "return_outliers_8sigma": 0,
+      "first_ts": "2026-06-01T00:00:00+08:00",
+      "last_ts": "2026-06-15T20:00:00+08:00",
+      "file": "data/ohlcv_4h.csv"
+    },
+    "ohlcv_1d": {
+      "raw_rows": 15,
+      "clean_rows": 15,
+      "duplicates": 0,
+      "bad_ohlc_dropped": 0,
+      "ohlc_relation_anomalies": 0,
+      "expected_bars": 15,
+      "completeness_pct": 100.0,
+      "missing_bars": 0,
+      "return_outliers_8sigma": 0,
+      "first_ts": "2026-06-01T08:00:00+08:00",
+      "last_ts": "2026-06-15T08:00:00+08:00",
+      "file": "data/ohlcv_1d.csv"
+    },
+    "ticker": {
+      "file": "data/ticker.json",
+      "last": 73.76,
+      "high_24h": 74.2,
+      "low_24h": 66.9,
+      "baseVolume_24h": 10239558.64,
+      "percentage_24h": 10.204691468698641
+    },
+    "funding_current": {
+      "file": "data/funding_current.json",
+      "rate": -8.99209888018e-05,
+      "next_funding_time_sh": "2026-06-16T08:00:00+08:00"
+    },
+    "funding_rate_history": {
+      "raw_rows": 45,
+      "clean_rows": 45,
+      "duplicates": 0,
+      "rate_range_anomalies": 0,
+      "first_ts": "2026-06-01T00:00:00+08:00",
+      "last_ts": "2026-06-15T16:00:00+08:00",
+      "file": "data/funding_rate.csv"
+    },
+    "open_interest": {
+      "raw_rows": 360,
+      "clean_rows": 360,
+      "duplicates": 0,
+      "null_values_dropped": 0,
+      "first_ts": "2026-05-31T23:00:00+08:00",
+      "last_ts": "2026-06-15T22:00:00+08:00",
+      "file": "data/open_interest.csv"
+    },
+    "long_short_ratio": {
+      "raw_rows": 360,
+      "clean_rows": 360,
+      "duplicates": 0,
+      "null_values_dropped": 0,
+      "first_ts": "2026-05-31T23:00:00+08:00",
+      "last_ts": "2026-06-15T22:00:00+08:00",
+      "file": "data/long_short_ratio.csv"
+    },
+    "taker_volume": {
+      "raw_rows": 360,
+      "clean_rows": 360,
+      "duplicates": 0,
+      "null_values_dropped": 0,
+      "first_ts": "2026-05-31T23:00:00+08:00",
+      "last_ts": "2026-06-15T22:00:00+08:00",
+      "file": "data/taker_volume.csv"
+    }
+  }
+}

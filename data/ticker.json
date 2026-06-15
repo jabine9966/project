@@ -1,0 +1,23 @@
+{
+  "symbol": "SOL/USDT:USDT",
+  "timestamp": 1781534398462,
+  "datetime": "2026-06-15T14:39:58.462Z",
+  "high": 74.2,
+  "low": 66.9,
+  "bid": 73.76,
+  "bidVolume": 1457.66,
+  "ask": 73.77,
+  "askVolume": 435.71,
+  "vwap": null,
+  "open": 66.93,
+  "close": 73.76,
+  "last": 73.76,
+  "previousClose": null,
+  "change": 6.83,
+  "percentage": 10.204691468698641,
+  "average": 70.34,
+  "baseVolume": 10239558.64,
+  "quoteVolume": null,
+  "markPrice": null,
+  "indexPrice": null
+}
