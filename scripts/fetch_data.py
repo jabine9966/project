@@ -1,7 +1,7 @@
 """
 OKX SOL-USDT-SWAP 数据下载脚本（第一部分）
 ----------------------------------------
-- 拉取最近 15 天的：1m/5m/15m/1h/4h/1d OHLCV、资金费率、持仓量、多空账户比、主动买卖盘、Ticker
+- 拉取最近 15 天的：1m/5m/15m/30m/1h/2h/4h/1d OHLCV、资金费率、持仓量、多空账户比、主动买卖盘、Ticker
 - 时区：所有写入的 `dt` 列为 Asia/Shanghai (UTC+8)
 - 内置 OKX 防封机制：自适应限流、随机抖动、指数退避重试、小批量分页、UA 伪装
 - 落盘前进行清洗与质量检测，最终生成 data/DATA_QUALITY_REPORT.md
@@ -28,7 +28,7 @@ import numpy as np
 SYMBOL = "SOL/USDT:USDT"        # CCXT 统一符号 → OKX SOL-USDT-SWAP
 INST_CCY = "SOL"
 LOOKBACK_DAYS = 15
-TIMEFRAMES = ["1m", "5m", "15m", "1h", "4h", "1d"]
+TIMEFRAMES = ["1m", "5m", "15m", "30m", "1h", "2h", "4h", "1d"]
 
 SH_TZ = timezone(timedelta(hours=8))   # Asia/Shanghai
 
@@ -123,7 +123,9 @@ TF_MS = {
     "1m": 60_000,
     "5m": 5 * 60_000,
     "15m": 15 * 60_000,
+    "30m": 30 * 60_000,
     "1h": 60 * 60_000,
+    "2h": 2 * 60 * 60_000,
     "4h": 4 * 60 * 60_000,
     "1d": 24 * 60 * 60_000,
 }
@@ -493,7 +495,9 @@ def write_quality_report_md(q: dict) -> None:
         "ohlcv_1m": "OHLCV 1 分钟",
         "ohlcv_5m": "OHLCV 5 分钟",
         "ohlcv_15m": "OHLCV 15 分钟",
+        "ohlcv_30m": "OHLCV 30 分钟",
         "ohlcv_1h": "OHLCV 1 小时",
+        "ohlcv_2h": "OHLCV 2 小时",
         "ohlcv_4h": "OHLCV 4 小时",
         "ohlcv_1d": "OHLCV 1 日",
         "ticker": "Ticker（实时）",
