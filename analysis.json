@@ -1,5 +1,5 @@
 {
-  "generated_at_sh": "2026-06-18T13:30:03.154100+08:00",
+  "generated_at_sh": "2026-06-18T14:13:03.502286+08:00",
   "symbol": "SOL-USDT-SWAP (OKX)",
   "lookback_days": 15,
   "snapshots": {
@@ -304,7 +304,7 @@
       "kurt": 13.732489103645072,
       "realized_vol_annualized_pct": 89.75437448943208,
       "max_drawdown_pct": -20.179846601428196,
-      "autocorr_lag1": -0.03874029074210515,
+      "autocorr_lag1": -0.038740290742105166,
       "hurst": 0.4501910407362875
     },
     "15m": {
@@ -315,7 +315,7 @@
       "kurt": 7.900911621196222,
       "realized_vol_annualized_pct": 87.16525959103501,
       "max_drawdown_pct": -19.96826236445385,
-      "autocorr_lag1": -0.027755341818266083,
+      "autocorr_lag1": -0.0277553418182661,
       "hurst": 0.4238174293207448
     },
     "30m": {
@@ -326,7 +326,7 @@
       "kurt": 3.1051784596158685,
       "realized_vol_annualized_pct": 83.16565587567618,
       "max_drawdown_pct": -19.544792907238318,
-      "autocorr_lag1": -0.006734215833463746,
+      "autocorr_lag1": -0.006734215833463745,
       "hurst": 0.47943161438838877
     },
     "1h": {
@@ -337,7 +337,7 @@
       "kurt": 2.1522690562874853,
       "realized_vol_annualized_pct": 83.92572710629224,
       "max_drawdown_pct": -19.45953106371705,
-      "autocorr_lag1": -0.09630541105098878,
+      "autocorr_lag1": -0.09630541105098885,
       "hurst": 0.5456615122341119
     },
     "2h": {
