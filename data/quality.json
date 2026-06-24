@@ -1,11 +1,11 @@
 {
-  "generated_at_sh": "2026-06-23T23:46:48.357650+08:00",
+  "generated_at_sh": "2026-06-24T12:56:37.939860+08:00",
   "exchange": "OKX",
   "symbol": "SOL/USDT:USDT",
   "inst_id": "SOL-USDT-SWAP",
   "lookback_days": 15,
-  "window_start_sh": "2026-06-08T23:46:48.357000+08:00",
-  "window_end_sh": "2026-06-23T23:46:48.357000+08:00",
+  "window_start_sh": "2026-06-09T12:56:37.939000+08:00",
+  "window_end_sh": "2026-06-24T12:56:37.939000+08:00",
   "datasets": {
     "ohlcv_1m": {
       "raw_rows": 21600,
@@ -16,9 +16,9 @@
       "expected_bars": 21600,
       "completeness_pct": 100.0,
       "missing_bars": 0,
-      "return_outliers_8sigma": 11,
-      "first_ts": "2026-06-08T23:47:00+08:00",
-      "last_ts": "2026-06-23T23:46:00+08:00",
+      "return_outliers_8sigma": 13,
+      "first_ts": "2026-06-09T12:57:00+08:00",
+      "last_ts": "2026-06-24T12:56:00+08:00",
       "file": "data/ohlcv_1m.csv"
     },
     "ohlcv_5m": {
@@ -31,8 +31,8 @@
       "completeness_pct": 100.0,
       "missing_bars": 0,
       "return_outliers_8sigma": 1,
-      "first_ts": "2026-06-08T23:50:00+08:00",
-      "last_ts": "2026-06-23T23:45:00+08:00",
+      "first_ts": "2026-06-09T13:00:00+08:00",
+      "last_ts": "2026-06-24T12:55:00+08:00",
       "file": "data/ohlcv_5m.csv"
     },
     "ohlcv_15m": {
@@ -45,8 +45,8 @@
       "completeness_pct": 100.0,
       "missing_bars": 0,
       "return_outliers_8sigma": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T23:45:00+08:00",
+      "first_ts": "2026-06-09T13:00:00+08:00",
+      "last_ts": "2026-06-24T12:45:00+08:00",
       "file": "data/ohlcv_15m.csv"
     },
     "ohlcv_30m": {
@@ -59,8 +59,8 @@
       "completeness_pct": 100.0,
       "missing_bars": 0,
       "return_outliers_8sigma": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T23:30:00+08:00",
+      "first_ts": "2026-06-09T13:00:00+08:00",
+      "last_ts": "2026-06-24T12:30:00+08:00",
       "file": "data/ohlcv_30m.csv"
     },
     "ohlcv_1h": {
@@ -73,8 +73,8 @@
       "completeness_pct": 100.0,
       "missing_bars": 0,
       "return_outliers_8sigma": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T23:00:00+08:00",
+      "first_ts": "2026-06-09T13:00:00+08:00",
+      "last_ts": "2026-06-24T12:00:00+08:00",
       "file": "data/ohlcv_1h.csv"
     },
     "ohlcv_2h": {
@@ -87,8 +87,8 @@
       "completeness_pct": 100.0,
       "missing_bars": 0,
       "return_outliers_8sigma": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T22:00:00+08:00",
+      "first_ts": "2026-06-09T14:00:00+08:00",
+      "last_ts": "2026-06-24T12:00:00+08:00",
       "file": "data/ohlcv_2h.csv"
     },
     "ohlcv_4h": {
@@ -101,8 +101,8 @@
       "completeness_pct": 100.0,
       "missing_bars": 0,
       "return_outliers_8sigma": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T20:00:00+08:00",
+      "first_ts": "2026-06-09T16:00:00+08:00",
+      "last_ts": "2026-06-24T12:00:00+08:00",
       "file": "data/ohlcv_4h.csv"
     },
     "ohlcv_1d": {
@@ -115,30 +115,30 @@
       "completeness_pct": 100.0,
       "missing_bars": 0,
       "return_outliers_8sigma": 0,
-      "first_ts": "2026-06-09T08:00:00+08:00",
-      "last_ts": "2026-06-23T08:00:00+08:00",
+      "first_ts": "2026-06-10T08:00:00+08:00",
+      "last_ts": "2026-06-24T08:00:00+08:00",
       "file": "data/ohlcv_1d.csv"
     },
     "ticker": {
       "file": "data/ticker.json",
-      "last": 68.44,
-      "high_24h": 73.53,
+      "last": 69.52,
+      "high_24h": 71.55,
       "low_24h": 68.07,
-      "baseVolume_24h": 12682626.45,
-      "percentage_24h": -6.2722541769378255
+      "baseVolume_24h": 11341429.55,
+      "percentage_24h": -2.660319238308597
     },
     "funding_current": {
       "file": "data/funding_current.json",
-      "rate": -0.0001242966232265,
-      "next_funding_time_sh": "2026-06-24T08:00:00+08:00"
+      "rate": -9.25891896205e-05,
+      "next_funding_time_sh": "2026-06-25T00:00:00+08:00"
     },
     "funding_rate_history": {
       "raw_rows": 45,
       "clean_rows": 45,
       "duplicates": 0,
       "rate_range_anomalies": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T16:00:00+08:00",
+      "first_ts": "2026-06-09T16:00:00+08:00",
+      "last_ts": "2026-06-24T08:00:00+08:00",
       "file": "data/funding_rate.csv"
     },
     "open_interest": {
@@ -146,8 +146,8 @@
       "clean_rows": 360,
       "duplicates": 0,
       "null_values_dropped": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T23:00:00+08:00",
+      "first_ts": "2026-06-09T13:00:00+08:00",
+      "last_ts": "2026-06-24T12:00:00+08:00",
       "file": "data/open_interest.csv"
     },
     "long_short_ratio": {
@@ -155,8 +155,8 @@
       "clean_rows": 360,
       "duplicates": 0,
       "null_values_dropped": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T23:00:00+08:00",
+      "first_ts": "2026-06-09T13:00:00+08:00",
+      "last_ts": "2026-06-24T12:00:00+08:00",
       "file": "data/long_short_ratio.csv"
     },
     "taker_volume": {
@@ -164,8 +164,8 @@
       "clean_rows": 360,
       "duplicates": 0,
       "null_values_dropped": 0,
-      "first_ts": "2026-06-09T00:00:00+08:00",
-      "last_ts": "2026-06-23T23:00:00+08:00",
+      "first_ts": "2026-06-09T13:00:00+08:00",
+      "last_ts": "2026-06-24T12:00:00+08:00",
       "file": "data/taker_volume.csv"
     }
   }
