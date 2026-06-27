@@ -1,0 +1,64 @@
+{
+  "generated_at": "2026-06-27T18:01:36.740965",
+  "symbol": "SOL/USDT:USDT",
+  "period_days": 15,
+  "timeframe": "1h",
+  "datasets": {
+    "ohlcv": {
+      "status": "EMPTY",
+      "rows": 0,
+      "columns": 0,
+      "issues": [
+        "No data retrieved"
+      ]
+    },
+    "ticker": {
+      "status": "EMPTY",
+      "rows": 0,
+      "columns": 0,
+      "issues": [
+        "No data retrieved"
+      ]
+    },
+    "order_book": {
+      "status": "EMPTY",
+      "rows": 0,
+      "columns": 0,
+      "issues": [
+        "No data retrieved"
+      ]
+    },
+    "open_interest": {
+      "status": "EMPTY",
+      "rows": 0,
+      "columns": 0,
+      "issues": [
+        "No data retrieved"
+      ]
+    },
+    "funding_rate": {
+      "status": "EMPTY",
+      "rows": 0,
+      "columns": 0,
+      "issues": [
+        "No data retrieved"
+      ]
+    },
+    "long_short_ratio": {
+      "status": "EMPTY",
+      "rows": 0,
+      "columns": 0,
+      "issues": [
+        "No data retrieved"
+      ]
+    },
+    "taker_volume": {
+      "status": "EMPTY",
+      "rows": 0,
+      "columns": 0,
+      "issues": [
+        "No data retrieved"
+      ]
+    }
+  }
+}
